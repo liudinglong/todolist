@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- v1.0 by Mandy 2016/12/07-->
+	<meta charset="utf-8"> 
+	<title>todolist</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- <link href="../bootstrap/twitter-bootstrap-v2/docs/assets/css/bootstrap.css" rel="stylesheet">  -->
+	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<style type="text/css">
+    #item{border: none;}
+    header{
+    	text-align: center;
+    	color: #444;
+    }
+   
+    footer{
+    	text-align: center;
+    }
+    .modal-header{background: #009fcc;}
+    .finished{
+    	color: #888;
+    	text-decoration: line-through;
+    }
+    .inProcess{
+    	color:#33ccff;
+    }
+
+	</style>
+
+    <script type="text/javascript">
+
+        //addItem
+		function addItem() {
+			var content = document.getElementById("content1").value;
+            var Group = $("input[name='optionsRadiosinline1']:checked").val();
+            var Prority = $("input[name='optionsRadiosinline']:checked").val();
+            var date = document.getElementById("date").value;
+            var dateNow=new Date();
+            var dateStr='<span class="label label-info">'+date+'</span>'+'&nbsp';
+            var spanStr;
+ 			
+            var str1="High",str2="Medium",str3="Low";
+             if (Prority==str1) {spanStr='<span class="badge badge-important">'+Prority+'</span>'}
+             if (Prority==str2) {spanStr='<span class="badge badge-info">'+ Prority+'</span>'}
+             if (Prority==str3) {spanStr='<span class="badge">'+ Prority+'</span>'}
+
+			var li=document.createElement("li");
+			li.className='list-group-item';
+			li.innerHTML='<input type="checkbox">'+'&nbsp'+spanStr+ dateStr+content;
+			var ul=document.getElementById(Group);
+			ul.appendChild(li);
+			setLocalstorage(); //setLocalstorage
+			
+		}
+        
+
+        //removeItem
+       
+        function removeItem() {
+            //$("input:checked").parent().remove();
+            $("input[type='checkbox']:checkbox:checked").each(function(){
+              $(this).parent().remove();
+             });
+            setLocalstorage();
+        }
+
+        //mark as finished
+        function finished() {
+            $("input[type='checkbox']:checkbox:checked").each(function(){
+              $(this).parent().removeClass("inProcess").addClass("finished");
+             });
+            setLocalstorage();
+        }
+        
+        //mark as inProcess
+        function inProcess() {
+        	$("input[type='checkbox']:checkbox:checked").each(function(){
+              $(this).parent().addClass("inProcess");
+             });
+        	setLocalstorage();
+        }
+
+        //removeFinished items
+        function removeFinished() {
+        	 $(".finished").each(function(){
+              $(this).remove();
+             });
+             setLocalstorage();
+        }
+	</script>
+
+    <script type="text/javascript">
+        //  loadLocalstorage 
+    	function loadLocalstorage() {
+    		if (window.localStorage.getItem("listbody")) {
+        	var listbodyStr1=window.localStorage.getItem("listbody");
+        	var d1=document.createElement('div');
+        	d1.innerHTML=listbodyStr1;
+        	$("#listbody").replaceWith(d1);
+        	}
+        }
+    </script>
+
+	
+
+</head>
+<body onload="loadLocalstorage();">
+    <header>
+    	<h1>My ToToList</h1>
+    	<h3>What needs to be done?</h3>
+    </header>
+    
+    <div id="listbody" class="listbody">
+    	<ul class="list-group" id="Work">
+			<li class="list-group-item"> <strong> Work todolist </strong> </li>
+			
+	    </ul>
+
+	    <ul class="list-group" id="Life">
+			<li class="list-group-item"> <strong>Life todolist</strong> </li>
+			
+		</ul>
+    </div>
+
+    <footer>
+    	<div class="btn-group">
+		    <button  class="btn btn-primary" data-toggle="modal" data-target="#myModal" > Add</button>
+		    <button  class="btn btn-warning" onclick="removeItem()">Remove</button>
+		    <button  class="btn btn-info" onclick="inProcess()">In Process</button>
+		    <button  class="btn btn-success" onclick="finished()">Finished</button>
+		    <button  class="btn btn-default" onclick="removeFinished()">Remove Finished</button>
+		</div>
+    </footer>
+    
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby=" myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						Add Item
+					</h4>
+				</div>
+				<div class="modal-body">
+				    <div id="Group">
+				    	<label>Group</label>
+					    <label class="checkbox-inline">
+				        <input type="radio" name="optionsRadiosinline1" id="Work" value="Work" checked>Work
+			            </label>
+						<label class="checkbox-inline">
+							<input type="radio" name="optionsRadiosinline1" id="Life"  value="Life">Life
+						</label>
+				    </div>
+
+				    <div id="Deadline">
+				    	<label>Deadline</label>
+				    	<input id="date" type="date" required="required">
+				    </div>
+
+				    <div id="Prority">
+				    	<label>Prority</label>
+					
+					    <label class="checkbox-inline">
+				        <input type="radio" name="optionsRadiosinline" id="High" value="High" checked>High 
+			            </label>
+						<label class="checkbox-inline">
+							<input type="radio" name="optionsRadiosinline" id="Medium"  value="Medium">Medium
+						</label>
+						<label class="checkbox-inline">
+							<input type="radio" name="optionsRadiosinline" id="Low"  value="Low">Low
+						</label>
+				    </div>
+
+				    <div id="content">
+				    	<label>Content</label>
+					<input id="content1" type="text" id="item" placeholder="write something here" required="required">
+				    </div>
+				</div>
+			    <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" >cancle
+					</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal"  onclick="addItem()">
+						save
+					</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal dialog -->
+    <div>
+    
+
+    <!-- place before </body> -->
+    <script type="text/javascript">  
+		function setLocalstorage() {
+			var listbody=document.getElementById("listbody");
+			console.log("listbody");
+			console.log(listbody); //null 
+
+			var d=document.createElement('div');
+			d.appendChild(listbody.cloneNode(true));
+			var listbodyStr=d.innerHTML;
+			d=null;
+			// console.log("listbodystr");
+			 //console.log(listbodyStr);
+            window.localStorage.setItem("listbody",listbodyStr);
+
+			}
+
+
+	</script>
+</body>
+
+</html>
